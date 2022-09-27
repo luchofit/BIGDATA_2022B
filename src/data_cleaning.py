@@ -5,11 +5,13 @@
 # datos = corregir_fechas(datos, col="FECHA1")->pd.dataframe
 # datos = corregir_fecha(datos, col="FECHA2")-->pd.dataframe
 
+import argparse
 import os
 from pathlib import Path
 import pandas as pd
 import numpy as np
 from dateutil.parser import parse
+from tabnanny import verbose
 
 data_source = Path(".").resolve().parent
 file_name = "llamadas123_julio_2022.csv"
@@ -53,10 +55,14 @@ def save_date(new_data):
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--verbose", type=int,default=0,help="para decidir si imprime información o no")
+    args = parser.parse_args()
+    verbose = args.verbose
     datos = get_data(file_name)
     new_data = duplicates(datos)
     new_data = cleaning(new_data)
-    save_date(new_data)
+    save_date(new_data,verbose)
     
 
 if __name__ == "__main__":
