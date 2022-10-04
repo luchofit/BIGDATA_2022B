@@ -14,7 +14,20 @@ from dateutil.parser import parse
 from tabnanny import verbose
 
 data_source = Path(".").resolve().parent
-file_name = "llamadas123_julio_2022.csv"
+listmonth = ["abril","mayo","junio","julio","agosto"]
+listyear = ["2022"]
+mes = str(input("Por favor ingrese el mes que quiere analizar: "))
+ano = str(input("Por favor ingrese el año que quiere analizar: "))
+mes = mes.strip()
+ano = ano.strip()
+try: 
+    if mes not in listmonth and ano not in listyear:
+        raise ValueError("No se encuentra este mes y año aún disponible para analizar. Por favor intente otra combinación")
+    else:
+        file_name = "llamadas123_"+mes+"_"+ano+".csv"
+        print(file_name)
+except ValueError as ve:
+    print(ve)    
 
 def get_data(file_name):
     data_raw = os.path.join(data_source,"data","raw",file_name)
