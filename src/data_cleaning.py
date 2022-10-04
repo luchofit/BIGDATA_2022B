@@ -6,12 +6,13 @@
 # datos = corregir_fecha(datos, col="FECHA2")-->pd.dataframe
 
 import argparse
+from fileinput import filename
 import os
 from pathlib import Path
 import pandas as pd
 import numpy as np
 from dateutil.parser import parse
-from tabnanny import verbose
+#from tabnanny import verbose
 
 data_source = Path(".").resolve().parent
 listmonth = ["abril","mayo","junio","julio","agosto"]
@@ -32,6 +33,7 @@ except ValueError as ve:
 def get_data(file_name):
     data_raw = os.path.join(data_source,"data","raw",file_name)
     datos = pd.read_csv(data_raw, sep =";", encoding="latin-1")
+    datos.columns = datos.columns.str.replace('[#,@,&,-]', '_')
     return datos
 
 def duplicates(datos):
@@ -62,20 +64,16 @@ def cleaning(new_data):
     return new_data
 
 def save_date(new_data):
-    out_name = "reporte_" + file_name 
+    out_name = "reporte_compilado.csv"
     out_path = os.path.join(data_source,"data","processed", out_name)
-    new_data.to_csv(out_path)
-
+    #new_data.to_csv(out_path, mode="a", header=not os.path.isfile(out_path) and os.stat(out_path).st_size != 0) #comprobamos que es un archivo y ademas no esta vació
+    new_data.to_csv(out_path, mode="a")
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--verbose", type=int,default=0,help="para decidir si imprime información o no")
-    args = parser.parse_args()
-    verbose = args.verbose
     datos = get_data(file_name)
     new_data = duplicates(datos)
     new_data = cleaning(new_data)
-    save_date(new_data,verbose)
+    save_date(new_data)
     
 
 if __name__ == "__main__":
