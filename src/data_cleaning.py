@@ -15,8 +15,8 @@ from dateutil.parser import parse
 #from tabnanny import verbose
 
 data_source = Path(".").resolve().parent
-listmonth = ["abril","mayo","junio","julio","agosto"]
-listyear = ["2022"]
+listmonth = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"]
+listyear = ["2021","2022"]
 mes = str(input("Por favor ingrese el mes que quiere analizar: "))
 ano = str(input("Por favor ingrese el año que quiere analizar: "))
 mes = mes.strip()
@@ -33,7 +33,14 @@ except ValueError as ve:
 def get_data(file_name):
     data_raw = os.path.join(data_source,"data","raw",file_name)
     datos = pd.read_csv(data_raw, sep =";", encoding="latin-1")
-    datos.columns = datos.columns.str.replace('[#,@,&,-]', '_')
+    try: 
+        if datos.shape[1] != 11:
+            raise ValueError("Revise el # de columnas del archivo antes de ingresarlo para analizar")
+        else:
+            datos.columns = datos.columns.str.replace('[#,@,&,-]', '_')
+            datos.columns = ["NUMERO_INCIDENTE","FECHA_INICIO_DESPLAZAMIENTO_MOVIL","CODIGO_LOCALIDAD","LOCALIDAD","EDAD","UNIDAD","GENERO","RED","TIPO_INCIDENTE","PRIORIDAD","RECEPCION"]
+    except ValueError as ve:
+        print(ve)
     return datos
 
 def duplicates(datos):
@@ -48,7 +55,7 @@ def cleaning(new_data):
     col_date = "FECHA_INICIO_DESPLAZAMIENTO_MOVIL"
     new_data[col_date] = pd.to_datetime(new_data[col_date], errors ="coerce",format="%Y/%m/%d")
     col_edad = "EDAD"
-    new_data[col_edad].replace({"SIN_DATO": np.nan}, inplace =True) #reemplazo SIN_DATO por valor nan en la columna EDAD
+    new_data[col_edad].replace({"SIN_DATO": np.nan, "Sin_dato": np.nan}, inplace =True) #reemplazo SIN_DATO y Sin_dato  por valor nan en la columna EDAD
     f = lambda x: x if pd.isna(x) else int(x)
     new_data[col_edad] = new_data[col_edad].apply(f) 
     col_recep = "RECEPCION"
