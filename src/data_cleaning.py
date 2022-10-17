@@ -15,6 +15,7 @@ from dateutil.parser import parse
 #from tabnanny import verbose
 
 data_source = Path(".").resolve().parent
+# bucket = "gs://lcastro_llamadas_123a" data_source desde la nube (explicado en video youtube)
 listmonth = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"]
 listyear = ["2021","2022"]
 mes = str(input("Por favor ingrese el mes que quiere analizar: "))
@@ -32,6 +33,7 @@ except ValueError as ve:
 
 def get_data(file_name):
     data_raw = os.path.join(data_source,"data","raw",file_name)
+    #data_raw = os.path.join(bucket,"data","raw",file_name) nube
     datos = pd.read_csv(data_raw, sep =";", encoding="latin-1")
     try: 
         if datos.shape[1] != 11:
@@ -73,6 +75,7 @@ def cleaning(new_data):
 def save_date(new_data):
     out_name = "reporte_compilado.csv"
     out_path = os.path.join(data_source,"data","processed", out_name)
+    #out_path = os.path.join(bucket,"data","processed", out_name) nube
     #new_data.to_csv(out_path, mode="a", header=not os.path.isfile(out_path) and os.stat(out_path).st_size != 0) #comprobamos que es un archivo y ademas no esta vació
     new_data.to_csv(out_path, mode="a")
 
