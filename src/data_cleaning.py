@@ -16,6 +16,7 @@ from dateutil.parser import parse
 
 data_source = Path(".").resolve().parent
 # bucket = "gs://lcastro_llamadas_123a" data_source desde la nube (explicado en video youtube)
+# link video = https://www.youtube.com/watch?v=rmq3R-EZefA
 listmonth = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"]
 listyear = ["2021","2022"]
 mes = str(input("Por favor ingrese el mes que quiere analizar: "))
